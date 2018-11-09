@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 
 from django.views.generic import View, DetailView, CreateView, UpdateView 
+from django.contrib.messages.views import SuccessMessageMixin
 
 from .forms import LoginForm, CreateUserForm, EditUserForm, EditPasswordForm
 
@@ -94,12 +95,13 @@ class CreateUserView(CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class EditUserView(LoginRequiredMixin, UpdateView):
+class EditUserView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = User
     login_url = 'clients:login'
     template_name = 'edit.html'
-    success_url = reverse_lazy('clients:dashboard')
+    success_url = reverse_lazy('clients:edit')
     form_class = EditUserForm
+    success_message = 'Tu perfil se ha actualizado correctamente'
 
     def get_object(self, queryset=None):
         return self.request.user

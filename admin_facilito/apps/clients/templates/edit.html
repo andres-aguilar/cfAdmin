@@ -15,8 +15,12 @@
         <form class="form" method="post">
             {% csrf_token %}
 
-            {% if message %} 
-            <p class='alert alert-danger'> {{ message }} </p>
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} 
+                        <p class='alert alert-success'> {{ message }} </p>
+                    {% endif %}
+                {% endfor %}
             {% endif %}
 
             {% for field in form %}
