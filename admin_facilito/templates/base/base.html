@@ -1,0 +1,24 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <title>cfAdmin - {% block title %}{% endblock title %}</title>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'clients:create' %}" class="btn btn-primary"> Crear </a>
+        <a href="{% url 'clients:show' request.user.username %}" class="btn btn-primary"> Ver </a>
+        <a href="{% url 'clients:edit' %}" class="btn btn-primary"> Editar </a>
+        <a href="{% url 'clients:edit_password' %}" class="btn btn-primary"> Editar pass </a>
+        <a href="{% url 'clients:logout' %}" class="btn btn-secondary"> salir </a>
+        
+        {% block container %} {% endblock container %}
+        {% block scripts %} {% endblock scripts %}
+    </div>
+</body>
+</html>
