@@ -1,10 +1,11 @@
 from django.conf.urls import url
 
-from .views import view, login_view, logout_view
+from .views import view, login_view, logout_view, create
 
 urlpatterns = [
     url(r'^show/', view, name='show'),
     url(r'^login/', login_view, name='login'),
     url(r'^logout/', logout_view, name='logout'),
+    url(r'^create/', create, name='create'),
     url(r'^dashboard/', view, name='dashboard'),
 ]

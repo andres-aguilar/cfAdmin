@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <title>cfAdmin - Login</title>
+    <title>cfAdmin - Create</title>
 </head>
 <body>
-    
     <div class="container">
-        <h1> LogIn </h1>
-        <p> Admin facilito </p>
+        <h1>Create</h1>
+
         <form class="form" method="post">
             {% csrf_token %}
 
@@ -29,8 +28,7 @@
                 </div>
             {% endfor %}
     
-            <button class="btn btn-primary" type="submit">Login</button>
-            <p> <a href="{% url 'clients:create' %}"> Registrate </a> </p>
+            <button class="btn btn-primary" type="submit">Crear</button>
         </form>
     </div>
 </body>
