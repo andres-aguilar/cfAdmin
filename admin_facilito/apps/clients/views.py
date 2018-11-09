@@ -1,16 +1,22 @@
 from django.shortcuts import render, redirect
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
 from .forms import LoginForm
 
-# Create your views here.
+url_redirect = 'clients:login'
+
+@login_required(login_url=url_redirect)
 def view(request):
     return render(request, 'dashboard.html', {})
 
 
 def login_view(request):
     message = None
+
+    if request.user.is_authenticated():
+        return redirect('clients:dashboard')
 
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -29,6 +35,7 @@ def login_view(request):
     return render(request, 'login.html', {'form': form, 'message': message})
 
 
+@login_required(login_url=url_redirect)
 def logout_view(request):
     logout(request)
     return redirect('clients:login')
