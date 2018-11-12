@@ -5,6 +5,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
 
+from apps.status.models import Status
+
 from .models import Project
 from .forms import ProjectForm
 
@@ -23,6 +25,8 @@ class CreateProjectView(LoginRequiredMixin, CreateView):
         self.object = form.save(commit=False)
         self.object.user = self.request.user
         self.object.save()
+        # Asiganando un estatus al proyecto
+        self.object.projectstatus_set.create(status=Status.get_default_status())
         return HttpResponseRedirect(self.get_url_project())
 
 

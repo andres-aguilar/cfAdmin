@@ -1,9 +1,12 @@
+import datetime
+
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import User
 
 from django.core.exceptions import ValidationError
 
-import datetime
+from apps.status.models import Status
 
 
 class Project(models.Model):
@@ -29,4 +32,13 @@ class Project(models.Model):
         self.validate_unique()
         self.slug = self.title.replace(' ', '-').lower()
         super(Project, self).save(*args, **kwargs)
+    
+
+class ProjectStatus(models.Model):
+    project = models.ForeignKey(Project)
+    status = models.ForeignKey(Status)
+    created = models.DateField(default=timezone.now)
+
+    def __str__(self):
+        return self.project.title
     
