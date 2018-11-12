@@ -1,0 +1,25 @@
+{% extends 'base/base.html' %}
+
+{% block title %} Create project {% endblock title %}
+
+{% block container %}
+    <h1> Projects </h1>
+    <p> <a href="{% url 'clients:dashboard' %}"> Regresar </a> </p>
+
+    <form class="form" method="post">
+            {% csrf_token %}
+
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} 
+                        <p class='alert alert-success'> {{ message }} </p>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            {% include 'includes/_forms.html' with form=form%}
+    
+            <button class="btn btn-primary" type="submit">  Guardar</button>
+            
+        </form>
+{% endblock container %}

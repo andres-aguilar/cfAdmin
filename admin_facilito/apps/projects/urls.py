@@ -1,3 +1,7 @@
 from django.conf.urls import url
 
-urlpatterns = []
+from .views import CreateProjectView
+
+urlpatterns = [
+    url(r'^create/$', CreateProjectView.as_view(), name='create')
+]
