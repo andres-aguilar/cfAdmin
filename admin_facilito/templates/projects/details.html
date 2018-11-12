@@ -1,0 +1,14 @@
+{% extends 'base/base.html' %}
+
+{% block title %} {{ project.title }} {% endblock title %}
+
+{% block container %}
+    <div class='row mt-5'> 
+        <div>
+            <h1> {{ project.title }} </h1>
+            <p class=""> {{ project.description }} </p>
+            <p> <small> {{ project.created }} - {{ project.dead_line }} </small> </p>
+        </div>
+    </div>
+
+{% endblock container %}
