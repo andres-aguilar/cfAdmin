@@ -39,13 +39,13 @@ def edit_password(request):
                 message = 'password actualizado'
 
 
-    return render(request, 'edit_password.html', {'form': form, 'message': message})
+    return render(request, 'clients/edit_password.html', {'form': form, 'message': message})
 
 
 class LoginView(View):
     form = LoginForm()
     message = None 
-    template = 'login.html'
+    template = 'clients/login.html'
 
     def get_context(self):
         return {'form': self.form, 'message': self.message}
@@ -71,7 +71,7 @@ class LoginView(View):
 
 class ShowUserView(DetailView):
     model = User
-    template_name = 'show.html'
+    template_name = 'clients/show.html'
     slug_field = 'username'
     slug_url_kwarg = 'username'
 
@@ -80,12 +80,12 @@ class DashboardView(LoginRequiredMixin, View):
     login_url = 'clients:login'
 
     def get(self, request, *args, **kwargs):
-        return render(request, 'dashboard.html', {})
+        return render(request, 'clients/dashboard.html', {})
 
 
 class CreateUserView(CreateView):
     success_url = reverse_lazy('clients:login')
-    template_name = 'create.html'
+    template_name = 'clients/create.html'
     model = User
     form_class = CreateUserForm
 
@@ -100,7 +100,7 @@ class EditUserView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     """  Edit user view (unused) """
     model = User
     login_url = 'clients:login'
-    template_name = 'edit.html'
+    template_name = 'clients/edit.html'
     success_url = reverse_lazy('clients:edit')
     form_class = EditUserForm
     success_message = 'Tu perfil se ha actualizado correctamente'
@@ -120,7 +120,7 @@ def edit_client(request):
             client_form.save()
             messages.success(request, 'Datos actualizados correctamente')
 
-    return render(request, 'edit_client.html', {'client_form': client_form, 'user_form': user_form})
+    return render(request, 'clients/edit_client.html', {'client_form': client_form, 'user_form': user_form})
 
 
 def user_client(user):
@@ -133,7 +133,7 @@ def user_client(user):
 class EditSocialMediaView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     login_url = 'clients:login'
     model = SocialNetwork
-    template_name = 'edit_social_network.html'
+    template_name = 'clients/edit_social_network.html'
     success_url = reverse_lazy('clients:edit_social')
     form_class = SocialMediaForm
     success_message = 'Información actualizada correctamente'

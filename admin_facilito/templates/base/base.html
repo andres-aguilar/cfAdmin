@@ -11,9 +11,10 @@
 </head>
 <body>
     <div class="container">
-        <a href="{% url 'clients:create' %}" class="btn btn-primary"> Crear </a>
+        <a href="{% url 'clients:create' %}" class="btn btn-primary"> Registrar usuario </a>
         <a href="{% url 'clients:show' request.user.username %}" class="btn btn-primary"> Ver </a>
         <a href="{% url 'clients:edit_client' %}" class="btn btn-primary"> Editar </a>
+        <a href="{% url 'projects:create' %}" class="btn btn-primary"> Crear proyecto </a>
         <a href="{% url 'clients:logout' %}" class="btn btn-secondary"> salir </a>
         
         {% block container %} {% endblock container %}
