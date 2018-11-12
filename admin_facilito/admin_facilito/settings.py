@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # Apps
     'apps.clients',
     'apps.projects',
+    'apps.status',
 ]
 
 MIDDLEWARE_CLASSES = [
