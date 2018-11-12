@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
+from .models import Client
 
 # Comman variables
 user_error_messages = {'required' : 'El nombre de usuario es obligatorio', 'unique' : 'El nombre de usuario no está disponible'}
@@ -50,6 +51,7 @@ class CreateUserForm(forms.ModelForm):
 
 class EditUserForm(forms.ModelForm):
     username = forms.CharField(
+        label = 'Nombre de usuario',
         max_length = 20,
         widget = forms.TextInput(attrs={'class': 'form-control'}),
         error_messages = user_error_messages
@@ -59,9 +61,11 @@ class EditUserForm(forms.ModelForm):
         error_messages = email_error_messages
     )
     first_name = forms.CharField(
+        label = 'Nombre',
         widget = forms.TextInput(attrs={'class': 'form-control'}),
     )
     last_name = forms.CharField(
+        label = 'Apellidos',
         widget = forms.TextInput(attrs={'class': 'form-control'}),
     )
 
@@ -94,3 +98,19 @@ class EditPasswordForm(forms.Form):
 
         if password1 != password2:
             raise forms.ValidationError('Los password no son los mismos', code='invalid')
+
+
+class EditClientForm(forms.ModelForm):
+    job = forms.CharField(
+        label = 'Trabajo actual',
+        max_length = 100,
+        widget = forms.TextInput(attrs={'class': 'form-control'})
+    )
+    bio = forms.CharField(
+        label = 'Biografía',
+        max_length = 200,
+        widget = forms.Textarea(attrs={'class': 'form-control'})
+    )
+    class Meta:
+        model = Client
+        exclude = ['user']

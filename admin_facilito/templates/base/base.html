@@ -13,8 +13,8 @@
     <div class="container">
         <a href="{% url 'clients:create' %}" class="btn btn-primary"> Crear </a>
         <a href="{% url 'clients:show' request.user.username %}" class="btn btn-primary"> Ver </a>
-        <a href="{% url 'clients:edit' %}" class="btn btn-primary"> Editar </a>
-        <a href="{% url 'clients:edit_password' %}" class="btn btn-primary"> Editar pass </a>
+        <a href="{% url 'clients:edit_client' %}" class="btn btn-primary"> Editar </a>
+        <a href="{% url 'clients:edit_password' %}" class="btn btn-primary"> Cambiar contraseña </a>
         <a href="{% url 'clients:logout' %}" class="btn btn-secondary"> salir </a>
         
         {% block container %} {% endblock container %}

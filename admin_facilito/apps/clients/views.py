@@ -1,9 +1,7 @@
 from django.contrib.auth.models import User
 
 from django.http import HttpResponseRedirect
-
 from django.shortcuts import render, redirect
-
 from django.core.urlresolvers import reverse_lazy
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,9 +9,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 
 from django.views.generic import View, DetailView, CreateView, UpdateView 
+
+from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 
-from .forms import LoginForm, CreateUserForm, EditUserForm, EditPasswordForm
+from .models import Client
+from .forms import LoginForm, CreateUserForm, EditUserForm, EditPasswordForm, EditClientForm
 
 
 @login_required(login_url='clients:login')
@@ -105,3 +106,24 @@ class EditUserView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+
+@login_required(login_url='clients:login')
+def edit_client(request):
+    client_form = EditClientForm(request.POST or None, instance=user_client(request.user))
+    user_form = EditUserForm(request.POST or None, instance=request.user)
+
+    if request.method == 'POST':
+        if client_form.is_valid() and user_form.is_valid():
+            user_form.save()
+            client_form.save()
+            messages.success(request, 'Datos actualizados correctamente')
+
+    return render(request, 'edit_client.html', {'client_form': client_form, 'user_form': user_form})
+
+
+def user_client(user):
+    try:
+        return user.client
+    except:
+        return Client(user=user)
