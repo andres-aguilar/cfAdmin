@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^$', home, name='home'),
     url(r'^admin/', admin.site.urls),
     url(r'^clients/', include('apps.clients.urls', namespace='clients')),
+    url(r'^projects/', include('apps.projects.urls', namespace='projects')),
 ]
 
 
