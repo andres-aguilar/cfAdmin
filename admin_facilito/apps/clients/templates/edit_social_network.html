@@ -1,14 +1,14 @@
 {% extends 'base/base.html' %}
 
-{% block title %} edit user {% endblock title %}
+{% block title %} Editar Redes sociales {% endblock title %}
 
 {% block container %}
-        <h1> Edit profile </h1>
+    <h1> Cliente </h1>
         <p> <a href="{% url 'clients:dashboard' %}"> Regresar </a> </p>
 
         <div>
             <p>
-                <a href="{% url 'clients:edit_social' %}" class="btn btn-primary"> Editar redes sociales </a>
+                <a href="{% url 'clients:edit_client' %}" class="btn btn-primary"> Editar perfil </a>
                 <a href="{% url 'clients:edit_password' %}" class="btn btn-primary"> Cambiar contraseña </a> 
             </p>
         </div>
@@ -24,15 +24,7 @@
                 {% endfor %}
             {% endif %}
 
-            {% for field in form %}
-                <div class="form-group">
-                {{ field.errors }}
-                {{ field.label_tag }} {{ field }}
-                {% if field.help_text %}
-                    <p class="help">{{ field.help_text|safe }}</p>
-                {% endif %}
-                </div>
-            {% endfor %}
+            {% include 'includes/_forms.html' with form=form%}
     
             <button class="btn btn-primary" type="submit">  Guardar</button>
             

@@ -13,8 +13,8 @@ from django.views.generic import View, DetailView, CreateView, UpdateView
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 
-from .models import Client
-from .forms import LoginForm, CreateUserForm, EditUserForm, EditPasswordForm, EditClientForm
+from .models import Client, SocialNetwork
+from .forms import LoginForm, CreateUserForm, EditUserForm, EditPasswordForm, EditClientForm, SocialMediaForm
 
 
 @login_required(login_url='clients:login')
@@ -97,6 +97,7 @@ class CreateUserView(CreateView):
 
 
 class EditUserView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    """  Edit user view (unused) """
     model = User
     login_url = 'clients:login'
     template_name = 'edit.html'
@@ -127,3 +128,22 @@ def user_client(user):
         return user.client
     except:
         return Client(user=user)
+
+
+class EditSocialMediaView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    login_url = 'clients:login'
+    model = SocialNetwork
+    template_name = 'edit_social_network.html'
+    success_url = reverse_lazy('clients:edit_social')
+    form_class = SocialMediaForm
+    success_message = 'Información actualizada correctamente'
+
+    def get_object(self, queryset=None):
+        return self.get_social_instance()
+
+    def get_social_instance(self):
+        try:
+            return self.request.user.socialnetwork
+        except:
+            return SocialNetwork(user=self.request.user) 
+

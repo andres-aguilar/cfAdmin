@@ -6,6 +6,13 @@
         <h1> Cliente </h1>
         <p> <a href="{% url 'clients:dashboard' %}"> Regresar </a> </p>
 
+        <div>
+            <p>
+                <a href="{% url 'clients:edit_social' %}" class="btn btn-primary"> Editar redes sociales </a>
+                <a href="{% url 'clients:edit_password' %}" class="btn btn-primary"> Cambiar contraseña </a> 
+            </p>
+        </div>
+
         <form class="form" method="post">
             {% csrf_token %}
 

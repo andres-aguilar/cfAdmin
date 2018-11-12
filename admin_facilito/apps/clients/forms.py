@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import Client
+from .models import Client, SocialNetwork
 
 # Comman variables
 user_error_messages = {'required' : 'El nombre de usuario es obligatorio', 'unique' : 'El nombre de usuario no está disponible'}
@@ -44,6 +44,12 @@ class CreateUserForm(forms.ModelForm):
         error_messages = email_error_messages
     )
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).count():
+            raise forms.ValidationError("El email ya está registrado")
+        return email
+
     class Meta:
         model = User
         fields = ('username', 'password', 'email')
@@ -68,6 +74,13 @@ class EditUserForm(forms.ModelForm):
         label = 'Apellidos',
         widget = forms.TextInput(attrs={'class': 'form-control'}),
     )
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        # Excluimos el usuario para evitar comparar contra él mismo
+        if User.objects.filter(email=email).exclude(pk=self.instance.id).count():
+            raise forms.ValidationError("El email ya está registrado")
+        return email
 
     class Meta:
         model =  User
@@ -113,4 +126,22 @@ class EditClientForm(forms.ModelForm):
     )
     class Meta:
         model = Client
+        exclude = ['user']
+
+
+class SocialMediaForm(forms.ModelForm):
+    facebook = forms.URLField(
+        max_length = 100,
+        widget = forms.URLInput(attrs={'class': 'form-control'})
+    )
+    twitter = forms.URLField(
+        max_length = 100,
+        widget = forms.URLInput(attrs={'class': 'form-control'})
+    )
+    github = forms.URLField(
+        max_length = 100,
+        widget = forms.URLInput(attrs={'class': 'form-control'})
+    )
+    class Meta:
+        model = SocialNetwork
         exclude = ['user']
