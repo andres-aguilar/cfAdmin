@@ -5,18 +5,22 @@
 {% block container %}
 
     <div class='row mt-5'>
-        {% for project in object_list %}
-        <div class="col-sm-4">
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                    <h4 class="card-title"> {{ project.title }} </h4>
-                    <p class="card-text"> {{ project.description }} </p>
-                    <p> <small> {{ project.created }} - {{ project.dead_line }} </small> </p>
-                    <a href="{% url 'projects:show'  project.slug %}" class="btn btn-primary">Ver</a>
-                    <a href="{% url 'projects:edit'  project.slug %}" class="btn btn-secondary">Editar</a>
+        {% for project_user in object_list %}
+
+            {% with project_user.get_project as project %}
+                <div class="col-sm-4">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h4 class="card-title"> {{ project.title }} </h4>
+                            <p class="card-text"> {{ project.description }} </p>
+                            <p> <small> {{ project.created }} - {{ project.dead_line }} </small> </p>
+                            <a href="{% url 'projects:show'  project.slug %}" class="btn btn-primary">Ver</a>
+                            <a href="{% url 'projects:edit'  project.slug %}" class="btn btn-secondary">Editar</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            {% endwith %}
+        
         {% endfor %}
     </div>
 

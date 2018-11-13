@@ -47,3 +47,26 @@ class ProjectStatus(models.Model):
     def __str__(self):
         return self.project.title
     
+
+class ProjectPermission(models.Model):
+    """ Project permissions """
+    title = models.CharField(max_length=50)
+    description = models.TextField()
+    level = models.IntegerField()
+    created = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.title
+    
+
+
+
+class ProjectUser(models.Model):
+    """ Project - User class """
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    permission = models.ForeignKey(ProjectPermission)
+    created = models.DateTimeField(default=timezone.now)
+
+    def get_project(self):
+        return self.project

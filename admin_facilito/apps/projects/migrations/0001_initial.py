@@ -24,8 +24,7 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(max_length=50)),
                 ('description', models.TextField()),
                 ('dead_line', models.DateField()),
-                ('created', models.DateField(default=datetime.date.today)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('created', models.DateField(default=datetime.date.today))
             ],
         ),
     ]
