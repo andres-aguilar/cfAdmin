@@ -29,10 +29,10 @@ class CreateProjectView(LoginRequiredMixin, CreateView):
         self.object = form.save(commit=False)
         self.object.save()
 
-        # Asignando los permisos de fundador al usuario creador del proyecto
-        self.object.projectuser_set.create(user=self.request.user, permission_id=1 )
         # Asiganando un estatus al proyecto
         self.object.projectstatus_set.create(status=Status.get_default_status())
+        # Asignando los permisos de fundador al usuario creador del proyecto
+        self.object.projectuser_set.create(user=self.request.user, permission_id=1 )
         return HttpResponseRedirect(self.get_url_project())
 
 

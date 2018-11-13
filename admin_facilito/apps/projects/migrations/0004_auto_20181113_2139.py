@@ -33,21 +33,5 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(default=django.utils.timezone.now)),
                 ('permission', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='projects.ProjectPermission')),
             ],
-        ),
-        migrations.AddField(
-            model_name='project',
-            name='user',
-            field=models.ForeignKey(default='', on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
-            preserve_default=False,
-        ),
-        migrations.AddField(
-            model_name='projectuser',
-            name='project',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='projects.Project'),
-        ),
-        migrations.AddField(
-            model_name='projectuser',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL),
-        ),
+        )
     ]
