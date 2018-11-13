@@ -24,9 +24,14 @@ class Project(models.Model):
 
 
     def validate_unique(self, exclude=None):
-        if Project.objects.filter(title=self.title).exists():
+        if Project.objects.filter(title=self.title).exclude(pk=self.id).exists():
             raise ValidationError("Ya hay un proyecto registrado con el mismo título")
 
+    def get_id_status(self):
+        return self.projectstatus_set.last().status_id
+
+    def get_status(self):
+        return self.projectstatus_set.last().status
 
     def save(self, *args, **kwargs):
         self.validate_unique()

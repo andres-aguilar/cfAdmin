@@ -2,12 +2,14 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import CreateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
 
 from apps.status.models import Status
+from apps.status.forms import StatusChoiceForm
 
 from .models import Project
 from .forms import ProjectForm
@@ -50,5 +52,17 @@ class ShowProjectView(LoginRequiredMixin, DetailView):
 def edit_project(request, slug=''):
     project = get_object_or_404(Project, slug=slug)
     form = ProjectForm(request.POST or None, instance=project)
+    form_status = StatusChoiceForm(request.POST or None, initial={'status': project.get_id_status()})
+    context = {
+        'form': form,
+        'form_status': form_status
+    }
 
-    return render(request, 'projects/edit.html', {'form': form})
+    if request.method == 'POST':
+        if form.is_valid() and form_status.is_valid():
+            form.save()
+            status = form_status.cleaned_data.get('status')
+            project.projectstatus_set.create(status_id=status.id)
+            messages.success(request, 'Proyecto actualizado correctamente')
+
+    return render(request, 'projects/edit.html', context)
