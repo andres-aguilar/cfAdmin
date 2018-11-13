@@ -41,7 +41,7 @@ class CreateProjectView(LoginRequiredMixin, CreateView):
         return HttpResponseRedirect(self.get_url_project())
 
 
-class ListProjectsView(LoginRequiredMixin, ListView):
+class ListUserProjectsView(LoginRequiredMixin, ListView):
     """ List projects """
     login_url = 'clients:login'
     template_name = 'projects/projects.html'
@@ -53,6 +53,16 @@ class ListProjectsView(LoginRequiredMixin, ListView):
 class ShowProjectView(LoginRequiredMixin, DetailView):
     model = Project
     template_name = 'projects/details.html'
+
+
+class ListAllProjectsView(LoginRequiredMixin, ListView):
+    """ List projects """
+    login_url = 'clients:login'
+    template_name = 'projects/all.html'
+
+    def get_queryset(self):
+        return Project.objects.all()
+
 
 
 @login_required(login_url='clients:login')
