@@ -16,11 +16,13 @@
         <p>Last name: {{ user.last_name }} </p>
 
         <ul>
-        {% for field in user.socialnetwork|list_fields %}
-            {% with user.socialnetwork|get_value:field as value %}
-            <li> {{field}} : {% if value %} <a href="{{ value }}">{{ value }}</a> {% endif %} </li>
-            {% endwith %}
-        {% endfor %}
+        {% if user.socialnetwork %}
+            {% for field in user.socialnetwork|list_fields %}
+                {% with user.socialnetwork|get_value:field as value %}
+                <li> {{field}} : {% if value %} <a href="{{ value }}">{{ value }}</a> {% endif %} </li>
+                {% endwith %}
+            {% endfor %}
+        {% endif %}
         </ul>
 
         <a href="{% url 'clients:dashboard' %}" class="btn btn-secondary"> Regresar </a>
