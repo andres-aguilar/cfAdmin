@@ -60,9 +60,11 @@ def edit_project(request, slug=''):
 
     if request.method == 'POST':
         if form.is_valid() and form_status.is_valid():
-            form.save()
             status = form_status.cleaned_data.get('status')
-            project.projectstatus_set.create(status_id=status.id)
-            messages.success(request, 'Proyecto actualizado correctamente')
+            form.save()
+            
+            if status.id != project.get_id_status():
+                project.projectstatus_set.create(status_id=status.id)
+                messages.success(request, 'Proyecto actualizado correctamente')
 
     return render(request, 'projects/edit.html', context)
