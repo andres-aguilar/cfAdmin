@@ -11,14 +11,17 @@ from apps.status.models import Status
 
 class Project(models.Model):
     """ Project model """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     description = models.TextField()
     dead_line = models.DateField()
     created = models.DateField(default=datetime.date.today)
     slug = models.CharField(max_length=50, default='')
 
+
     def __str__(self):
         return self.title
+
 
     def validate_unique(self, exclude=None):
         if Project.objects.filter(title=self.title).exclude(pk=self.id).exists():
@@ -44,22 +47,3 @@ class ProjectStatus(models.Model):
     def __str__(self):
         return self.project.title
     
-
-
-class ProjectPermission(models.Model):
-    """ Project permissions """
-    title = models.CharField(max_length=50)
-    description = models.TextField()
-    level = models.IntegerField()
-    created = models.DateTimeField(default=timezone.now)
-
-
-
-class ProjectUser(models.Model):
-    """ Project - User class """
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    user = models.ForeignKey(User)
-    permission = models.ForeignKey(ProjectPermission)
-    created = models.DateTimeField(default=timezone.now)
-
-
