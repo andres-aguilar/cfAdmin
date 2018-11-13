@@ -11,6 +11,8 @@ from django.core.urlresolvers import reverse_lazy
 from apps.status.models import Status
 from apps.status.forms import StatusChoiceForm
 
+from django.db import transaction
+
 from .forms import ProjectForm
 from .models import Project, ProjectUser
 
@@ -25,14 +27,17 @@ class CreateProjectView(LoginRequiredMixin, CreateView):
     def get_url_project(self):
         return reverse_lazy('projects:show', kwargs={'slug': self.object.slug})
 
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
+    @transaction.atomic
+    def create_objects(self):
         self.object.save()
-
         # Asiganando un estatus al proyecto
         self.object.projectstatus_set.create(status=Status.get_default_status())
         # Asignando los permisos de fundador al usuario creador del proyecto
         self.object.projectuser_set.create(user=self.request.user, permission_id=1 )
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.create_objects()
         return HttpResponseRedirect(self.get_url_project())
 
 
