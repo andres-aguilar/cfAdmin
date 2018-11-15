@@ -6,7 +6,10 @@
     <div class='row mt-5'> 
         <div>
             <h1> {{ project.title }} </h1>
-            <p> <a href="{% url 'projects:my_projects' %}"> Regresar </a> </p>
+            <p> 
+                <a href="{% url 'projects:my_projects' %}"> Regresar </a> 
+                <a href="{% url 'projects:edit'  project.slug %}" class="btn btn-secondary">Editar</a>
+            </p>
             <p class=""> {{ project.description }} </p>
             <p> <small> {{ project.created }} - {{ project.dead_line }} </small> </p>
         </div>
