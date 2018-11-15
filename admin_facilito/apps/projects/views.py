@@ -54,6 +54,13 @@ class ShowProjectView(LoginRequiredMixin, DetailView):
     model = Project
     template_name = 'projects/details.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(ShowProjectView, self).get_context_data(**kwargs)
+
+        context['has_permission'] = self.object.user_has_permission(self.request.user)
+
+        return context
+
 
 class ListAllProjectsView(LoginRequiredMixin, ListView):
     """ List projects """
@@ -68,8 +75,15 @@ class ListAllProjectsView(LoginRequiredMixin, ListView):
 @login_required(login_url='clients:login')
 def edit_project(request, slug=''):
     project = get_object_or_404(Project, slug=slug)
+    
+    # Solo los usuarios con permisos pueden editar el proyecto
+    if not project.user_has_permission(request.user):
+        lazy = reverse_lazy('projects:show', kwargs={'slug': project.slug})
+        return HttpResponseRedirect(lazy)
+    
     form = ProjectForm(request.POST or None, instance=project)
     form_status = StatusChoiceForm(request.POST or None, initial={'status': project.get_id_status()})
+
     context = {
         'form': form,
         'form_status': form_status

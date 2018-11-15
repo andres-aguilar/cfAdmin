@@ -17,10 +17,12 @@ class Project(models.Model):
     created = models.DateField(default=datetime.date.today)
     slug = models.CharField(max_length=50, default='')
 
-
     def __str__(self):
         return self.title
 
+    def user_has_permission(self, user):
+        """ Verificando si un usuario tiene permisos para acceder al proyecto (editar) """
+        return self.projectuser_set.filter(user=user, permission_id=1).count() > 0
 
     def validate_unique(self, exclude=None):
         if Project.objects.filter(title=self.title).exclude(pk=self.id).exists():
@@ -68,7 +70,6 @@ class ProjectUser(models.Model):
 
     def __str__(self):
         return "{} - {}".format(self.user.username, self.project.title)
-    
 
     def get_project(self):
         return self.project
