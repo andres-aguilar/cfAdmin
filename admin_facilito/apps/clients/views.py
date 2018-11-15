@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth.models import User
 
 from django.shortcuts import render, redirect
@@ -13,16 +15,17 @@ from django.views.generic import View, DetailView, CreateView, UpdateView
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 
-from django.core import serializers
-
 from .models import Client, SocialNetwork
 from .forms import LoginForm, CreateUserForm, EditUserForm, EditPasswordForm, EditClientForm, SocialMediaForm
 
 @login_required(login_url='clients:login')
 def user_filter(request, username):
     users = User.objects.filter(username__startswith=username)
-    users = serializers.serialize('json', users)
-    return HttpResponse(users, content_type='application/json')
+    users = [ user_serializer(user) for user in users ]
+    return HttpResponse(json.dumps(users), content_type='application/json')
+
+def user_serializer(user):
+    return {'id': user.id, 'username': user.username}
 
 @login_required(login_url='clients:login')
 def logout_view(request):
