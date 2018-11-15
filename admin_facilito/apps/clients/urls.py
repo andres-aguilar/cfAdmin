@@ -13,7 +13,7 @@ urlpatterns = [
     url(r'^edit_social/', EditSocialMediaView.as_view(), name='edit_social'),
     url(r'^edit_password/', edit_password, name='edit_password'),
 
-    url(r'^filter/(?P<username>\w+)/$', user_filter, name='filter'),
+    url(r'^filter$', user_filter, name='filter'),
 
     url(r'^dashboard/', DashboardView.as_view(), name='dashboard'),
 ]

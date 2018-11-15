@@ -19,7 +19,8 @@ from .models import Client, SocialNetwork
 from .forms import LoginForm, CreateUserForm, EditUserForm, EditPasswordForm, EditClientForm, SocialMediaForm
 
 @login_required(login_url='clients:login')
-def user_filter(request, username):
+def user_filter(request):
+    username = request.GET.get('username')
     users = User.objects.filter(username__startswith=username)
     users = [ user_serializer(user) for user in users ]
     return HttpResponse(json.dumps(users), content_type='application/json')
