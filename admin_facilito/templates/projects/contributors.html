@@ -1,0 +1,15 @@
+{% extends 'base/base.html' %}
+
+{% block title %} Project contributors {% endblock title %} Project contributors 
+
+{% block container %}
+
+    <h3> Contributors </h3>
+    
+    <ul>
+    {% for user in object_list %}
+        <li> {{ user.user }} - {{ user.permission }}</li>
+    {% endfor %}
+    </ul>
+
+{% endblock container %}

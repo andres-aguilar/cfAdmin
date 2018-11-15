@@ -71,6 +71,13 @@ class ListAllProjectsView(LoginRequiredMixin, ListView):
         return Project.objects.all()
 
 
+class ListContributors(LoginRequiredMixin, ListView):
+    template_name = 'projects/contributors.html'
+
+    def get_queryset(self):
+        project = get_object_or_404(Project, slug=self.kwargs['slug'])
+        return ProjectUser.objects.filter(project=project)
+
 
 @login_required(login_url='clients:login')
 def edit_project(request, slug=''):
