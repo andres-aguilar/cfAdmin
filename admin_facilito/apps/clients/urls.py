@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from .views import DashboardView, LoginView, logout_view, EditSocialMediaView
-from .views import CreateUserView, ShowUserView, edit_password,  edit_client
+from .views import CreateUserView, ShowUserView, edit_password,  edit_client, user_filter
 
 urlpatterns = [
     url(r'^login/', LoginView.as_view(), name='login'),
@@ -12,6 +12,8 @@ urlpatterns = [
     url(r'^edit/', edit_client, name='edit_client'),
     url(r'^edit_social/', EditSocialMediaView.as_view(), name='edit_social'),
     url(r'^edit_password/', edit_password, name='edit_password'),
+
+    url(r'^filter/(?P<username>\w+)/$', user_filter, name='filter'),
 
     url(r'^dashboard/', DashboardView.as_view(), name='dashboard'),
 ]

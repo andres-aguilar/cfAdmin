@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
 
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse_lazy
+from django.http import HttpResponseRedirect, HttpResponse
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -13,9 +13,16 @@ from django.views.generic import View, DetailView, CreateView, UpdateView
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 
+from django.core import serializers
+
 from .models import Client, SocialNetwork
 from .forms import LoginForm, CreateUserForm, EditUserForm, EditPasswordForm, EditClientForm, SocialMediaForm
 
+@login_required(login_url='clients:login')
+def user_filter(request, username):
+    users = User.objects.filter(username__startswith=username)
+    users = serializers.serialize('json', users)
+    return HttpResponse(users, content_type='application/json')
 
 @login_required(login_url='clients:login')
 def logout_view(request):
