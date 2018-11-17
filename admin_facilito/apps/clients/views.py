@@ -1,11 +1,11 @@
-import json
 
-from django.contrib.auth.models import User
+from django.core import serializers
+from django.core.urlresolvers import reverse_lazy
 
 from django.shortcuts import render, redirect
-from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponseRedirect, HttpResponse
 
+from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
@@ -22,11 +22,8 @@ from .forms import LoginForm, CreateUserForm, EditUserForm, EditPasswordForm, Ed
 def user_filter(request):
     username = request.GET.get('username')
     users = User.objects.filter(username__startswith=username)
-    users = [ user_serializer(user) for user in users ]
-    return HttpResponse(json.dumps(users), content_type='application/json')
-
-def user_serializer(user):
-    return {'id': user.id, 'username': user.username}
+    users = serializers.serialize('json', users, fields=('id', 'username'))
+    return HttpResponse(users, content_type='application/json')
 
 @login_required(login_url='clients:login')
 def logout_view(request):
