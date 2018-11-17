@@ -12,7 +12,7 @@
     {% endfor %}
     </ul>
 
-    <form class="form" id='search-user-form' method="get" action="{% url 'clients:filter' %}">
+    <form class="form" id='search-user-form' action="{% url 'clients:filter' %}">
         <div class="form-group"> 
             <input class="form-control" type="text" name="username" id='username'>
         </div>
