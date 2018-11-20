@@ -87,14 +87,22 @@ class ListContributors(LoginRequiredMixin, ListView):
 
 
 # Functions
+def admin_only(function):
+    def wrap(request, *args, **kwargs):
+        project = get_object_or_404(Project, slug=kwargs['slug'])
+
+        if not project.user_has_permission(request.user):
+            lazy = reverse_lazy('projects:show', kwargs={'slug': project.slug})
+            return HttpResponseRedirect(lazy)
+        return function(request, *args, **kwargs)
+    return wrap
+
+
 @login_required(login_url='clients:login')
+@admin_only
 def delete_contributor(request, slug, username):
     project = get_object_or_404(Project, slug=slug)
     user = get_object_or_404(User, username=username)
-
-    if not project.user_has_permission(request.user):
-        lazy = reverse_lazy('projects:show', kwargs={'slug': project.slug})
-        return HttpResponseRedirect(lazy)
 
     projectuser = get_object_or_404(ProjectUser, user=user, project=project)
 
@@ -115,7 +123,8 @@ def user_contributor(request, slug, username):
 
     if request.method == 'POST' and form.is_valid():
         selection_id = form.cleaned_data.get('permission').id 
-        if selection_id != permission.id:
+
+        if selection_id != permission.id and permission.valid_change_permission():
             permission.permission_id = selection_id
             permission.save()
             messages.success(request, 'Datos actualizados correctamente!')
@@ -130,13 +139,10 @@ def user_contributor(request, slug, username):
     return render(request, 'projects/contributor.html', context)
 
 @login_required(login_url='clients:login')
+@admin_only
 def add_contributor(request, slug, username):
     project = get_object_or_404(Project, slug=slug)
     user = get_object_or_404(User, username=username)
-
-    if not project.user_has_permission(request.user):
-        lazy = reverse_lazy('projects:show', kwargs={'slug': project.slug})
-        return HttpResponseRedirect(lazy)
 
     if not project.projectuser_set.filter(user=user).exists():
         project.projectuser_set.create(user=user, 
@@ -147,13 +153,9 @@ def add_contributor(request, slug, username):
 
 
 @login_required(login_url='clients:login')
+@admin_only
 def edit_project(request, slug=''):
     project = get_object_or_404(Project, slug=slug)
-    
-    # Solo los usuarios con permisos pueden editar el proyecto
-    if not project.user_has_permission(request.user):
-        lazy = reverse_lazy('projects:show', kwargs={'slug': project.slug})
-        return HttpResponseRedirect(lazy)
     
     form = ProjectForm(request.POST or None, instance=project)
     form_status = StatusChoiceForm(request.POST or None, initial={'status': project.get_id_status()})
