@@ -22,7 +22,10 @@ class Project(models.Model):
 
     def user_has_permission(self, user):
         """ Verificando si un usuario tiene permisos para acceder al proyecto (editar) """
-        return self.projectuser_set.filter(user=user, permission_id=1).count() > 0
+        return self.projectuser_set.filter(
+            user = user, 
+            permission_id__in = ProjectPermission.admin_permission()
+            ).count() > 0
 
     def validate_unique(self, exclude=None):
         if Project.objects.filter(title=self.title).exclude(pk=self.id).exists():
@@ -71,6 +74,11 @@ class ProjectPermission(models.Model):
     def contributor_permission(cls):
         return ProjectPermission.objects.get(pk=3)
 
+    @classmethod
+    def admin_permission(cls):
+        return [1 ,2]
+
+
 class ProjectUser(models.Model):
     """ Project - User class """
     project = models.ForeignKey(Project, on_delete=models.CASCADE, default=1)
@@ -86,3 +94,14 @@ class ProjectUser(models.Model):
 
     def is_founder(self):
         return self.permission == ProjectPermission.founder_permission()
+
+    def valid_change_permission(self):
+        if not self.is_founder():
+            return True
+        return self.exist_founder()
+        
+    def exist_founder(self):
+        return ProjectUser.objects.filter(
+            project = self.project,
+            permission = ProjectPermission.founder_permission()
+        ).exclude(user=self.user).count() > 0
