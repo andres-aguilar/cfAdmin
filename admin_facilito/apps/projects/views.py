@@ -91,7 +91,10 @@ def add_contributor(request, slug, username):
         lazy = reverse_lazy('projects:show', kwargs={'slug': project.slug})
         return HttpResponseRedirect(lazy)
 
-    project.projectuser_set.create(user=user, permission_id=1)
+    if not project.projectuser_set.filter(user=user).exists():
+        project.projectuser_set.create(user=user, permission_id=1)
+
+    
     return redirect('projects:contributors', slug=project.slug)
 
 
