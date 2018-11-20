@@ -5,7 +5,10 @@
 {% block container %}
 
     <h2> Colaborador: {{ user.username }} </h2>
-    <p> <a href="{% url 'projects:contributors' project.slug %}">Regresar</a> </p>
+    <p> 
+        <a href="{% url 'projects:contributors' project.slug %}">Regresar</a> 
+        <a class="text-danger" href="{% url 'projects:delete_contributor' project.slug user.username %}"> Eliminar </a>
+    </p>
 
     {% if messages %}
         {% for message in messages %}
@@ -16,7 +19,6 @@
     {% endif %}
 
     {% if has_permission %}
-
         <form method='post'>
             {% csrf_token %}
             {% include 'includes/_forms.html' with form=form %}

@@ -88,6 +88,23 @@ class ListContributors(LoginRequiredMixin, ListView):
 
 # Functions
 @login_required(login_url='clients:login')
+def delete_contributor(request, slug, username):
+    project = get_object_or_404(Project, slug=slug)
+    user = get_object_or_404(User, username=username)
+
+    if not project.user_has_permission(request.user):
+        lazy = reverse_lazy('projects:show', kwargs={'slug': project.slug})
+        return HttpResponseRedirect(lazy)
+
+    projectuser = get_object_or_404(ProjectUser, user=user, project=project)
+
+    if not projectuser.is_founder():
+        projectuser.delete()
+
+    return redirect('projects:contributors', slug=project.slug)
+
+
+@login_required(login_url='clients:login')
 def user_contributor(request, slug, username):
     project = get_object_or_404(Project, slug=slug)
     user = get_object_or_404(User, username=username)

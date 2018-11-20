@@ -83,3 +83,6 @@ class ProjectUser(models.Model):
 
     def get_project(self):
         return self.project
+
+    def is_founder(self):
+        return self.permission == ProjectPermission.founder_permission()
