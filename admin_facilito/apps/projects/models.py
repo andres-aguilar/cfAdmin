@@ -59,7 +59,17 @@ class ProjectPermission(models.Model):
     def __str__(self):
         return self.title
 
+    @classmethod
+    def founder_permission(cls):
+        return ProjectPermission.objects.get(pk=1)
 
+    @classmethod
+    def cofounder_permission(cls):
+        return ProjectPermission.objects.get(pk=2)
+
+    @classmethod
+    def contributor_permission(cls):
+        return ProjectPermission.objects.get(pk=3)
 
 class ProjectUser(models.Model):
     """ Project - User class """

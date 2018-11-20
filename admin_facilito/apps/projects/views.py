@@ -14,8 +14,8 @@ from apps.status.forms import StatusChoiceForm
 
 from django.db import transaction
 
-from .forms import ProjectForm
-from .models import Project, ProjectUser
+from .forms import ProjectForm, PermissionProject
+from .models import Project, ProjectUser, ProjectPermission
 
 
 class CreateProjectView(LoginRequiredMixin, CreateView):
@@ -34,7 +34,8 @@ class CreateProjectView(LoginRequiredMixin, CreateView):
         # Asiganando un estatus al proyecto
         self.object.projectstatus_set.create(status=Status.get_default_status())
         # Asignando los permisos de fundador al usuario creador del proyecto
-        self.object.projectuser_set.create(user=self.request.user, permission_id=1 )
+        self.object.projectuser_set.create(user=self.request.user, 
+            permission=ProjectPermission.founder_permission() )
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -76,11 +77,40 @@ class ListContributors(LoginRequiredMixin, ListView):
     template_name = 'projects/contributors.html'
 
     def get_queryset(self):
-        project = get_object_or_404(Project, slug=self.kwargs['slug'])
-        return ProjectUser.objects.filter(project=project)
+        self.project = get_object_or_404(Project, slug=self.kwargs['slug'])
+        return ProjectUser.objects.filter(project=self.project)
+
+    def get_context_data(self, **kwargs):
+        context = super(ListContributors, self).get_context_data(**kwargs)
+        context['project'] = self.project
+        return context
 
 
 # Functions
+@login_required(login_url='clients:login')
+def user_contributor(request, slug, username):
+    project = get_object_or_404(Project, slug=slug)
+    user = get_object_or_404(User, username=username)
+    has_permission = project.user_has_permission(request.user)
+    permission = get_object_or_404(ProjectUser, user=user, project=project)
+
+    form = PermissionProject(request.POST or None, initial={'permission': permission.permission_id})
+
+    if request.method == 'POST' and form.is_valid():
+        selection_id = form.cleaned_data.get('permission').id 
+        if selection_id != permission.id:
+            permission.permission_id = selection_id
+            permission.save()
+            messages.success(request, 'Datos actualizados correctamente!')
+
+    context = {
+        'project': project,
+        'user': user,
+        'form': form,
+        'has_permission': has_permission
+    }
+
+    return render(request, 'projects/contributor.html', context)
 
 @login_required(login_url='clients:login')
 def add_contributor(request, slug, username):
@@ -92,7 +122,8 @@ def add_contributor(request, slug, username):
         return HttpResponseRedirect(lazy)
 
     if not project.projectuser_set.filter(user=user).exists():
-        project.projectuser_set.create(user=user, permission_id=1)
+        project.projectuser_set.create(user=user, 
+            permission=ProjectPermission.contributor_permission())
 
     
     return redirect('projects:contributors', slug=project.slug)

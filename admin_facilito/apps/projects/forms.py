@@ -3,7 +3,7 @@ import datetime
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import Project
+from .models import Project, ProjectPermission
 
 
 class ProjectForm(forms.ModelForm):
@@ -25,3 +25,11 @@ class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ('title', 'description', 'dead_line')
+
+
+class PermissionProject(forms.Form):
+    permission = forms.ModelChoiceField(
+        queryset = ProjectPermission.objects.all(),
+        initial = 0,
+        widget =  forms.Select(attrs={'class': 'form-control'})
+    )

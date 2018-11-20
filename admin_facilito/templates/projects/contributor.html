@@ -1,0 +1,27 @@
+{% extends 'base/base.html' %}
+
+{% block title %} Colaborador {% endblock title %}
+
+{% block container %}
+
+    <h2> Colaborador: {{ user.username }} </h2>
+    <p> <a href="{% url 'projects:contributors' project.slug %}">Regresar</a> </p>
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} 
+                <p class='alert alert-success'> {{ message }} </p>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    {% if has_permission %}
+
+        <form method='post'>
+            {% csrf_token %}
+            {% include 'includes/_forms.html' with form=form %}
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+    {% endif %}
+
+{% endblock container %}
