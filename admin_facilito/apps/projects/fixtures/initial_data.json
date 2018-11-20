@@ -1,0 +1,28 @@
+[{
+    "model": "projects.projectpermission",
+    "pk": 1,
+    "fields": {
+        "title": "Fundador",
+        "description": "Fundador",
+        "level": 1,
+        "created": "2018-11-13T22:19:02Z"
+    }
+}, {
+    "model": "projects.projectpermission",
+    "pk": 2,
+    "fields": {
+        "title": "Cofundador",
+        "description": "Cofundador",
+        "level": 1,
+        "created": "2018-11-20T19:19:57Z"
+    }
+}, {
+    "model": "projects.projectpermission",
+    "pk": 3,
+    "fields": {
+        "title": "Colaborador",
+        "description": "Colaborador",
+        "level": 2,
+        "created": "2018-11-20T19:20:31Z"
+    }
+}]
