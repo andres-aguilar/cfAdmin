@@ -1,8 +1,9 @@
-from django.shortcuts import render, get_object_or_404
-from django.views.generic import CreateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import CreateView, ListView, DetailView
 
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
 from django.http import HttpResponseRedirect
@@ -77,6 +78,21 @@ class ListContributors(LoginRequiredMixin, ListView):
     def get_queryset(self):
         project = get_object_or_404(Project, slug=self.kwargs['slug'])
         return ProjectUser.objects.filter(project=project)
+
+
+# Functions
+
+@login_required(login_url='clients:login')
+def add_contributor(request, slug, username):
+    project = get_object_or_404(Project, slug=slug)
+    user = get_object_or_404(User, username=username)
+
+    if not project.user_has_permission(request.user):
+        lazy = reverse_lazy('projects:show', kwargs={'slug': project.slug})
+        return HttpResponseRedirect(lazy)
+
+    project.projectuser_set.create(user=user, permission_id=1)
+    return redirect('projects:contributors', slug=project.slug)
 
 
 @login_required(login_url='clients:login')

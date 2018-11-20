@@ -9,7 +9,16 @@ form.addEventListener('submit', function(evt) {
 
     axios.get(`${action}?username=${username}`)
     .then(function (response) {
-        console.log(response)
+        let html = ""
+        let link = window.location.pathname + "add/"
+        
+        response.data.forEach(el => {
+                user = el.fields
+                let href = link + user.username + "/"
+                html += `<li> ${user.username} <a href="${href}">Agregar</a></li>`
+        })
+
+        document.querySelector("#results").innerHTML = html
     })
     .catch(function (error) {
         console.log(error)

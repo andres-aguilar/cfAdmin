@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from .views import edit_project
+from .views import edit_project, add_contributor
 from .views import CreateProjectView, ListUserProjectsView, ShowProjectView, ListAllProjectsView, ListContributors
 
 urlpatterns = [
@@ -10,4 +10,5 @@ urlpatterns = [
     url(r'^create/$', CreateProjectView.as_view(), name='create'),
     url(r'^edit/(?P<slug>[\w-]+)/$', edit_project, name='edit'),
     url(r'^contributors/(?P<slug>[\w-]+)/$', ListContributors.as_view(), name='contributors'),
+    url(r'^contributors/(?P<slug>[\w-]+)/add/(?P<username>[\w-]+)/$', add_contributor, name='add_contributors'),
 ]
